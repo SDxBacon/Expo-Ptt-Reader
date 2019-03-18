@@ -12,7 +12,7 @@ export default class HotboardItem extends React.PureComponent {
   render() {
     const {
       nrec,
-      artitleTitle,
+      articleTitle,
       author,
       date,
       mark,
@@ -25,7 +25,7 @@ export default class HotboardItem extends React.PureComponent {
           paddingVertical: 12,
           justifyContent:'space-between',
         }}>
-          <StyledText.MonoText style={styles.boardName}>{artitleTitle}</StyledText.MonoText>
+          <StyledText.MonoText style={styles.boardName}>{articleTitle}</StyledText.MonoText>
           <StyledText.MonoText style={styles.boardTitle}>{author}</StyledText.MonoText>
         </View>
         <View style={{

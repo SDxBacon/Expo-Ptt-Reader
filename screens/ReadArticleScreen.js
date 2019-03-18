@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   FlatList,
+  ScrollView,
   StyleSheet,
 } from 'react-native';
 
@@ -11,11 +12,11 @@ import { MonoText } from '../components/StyledText';
 import { ArticleListItem } from '../components';
 import { ptt } from '../utils';
 
-export default class InBoardScreen extends React.Component {
+export default class ReadArticleScreen extends React.Component {
   static navigationOptions = ({navigation}) => {
-    const boardName = navigation.getParam('boardName');
+    const title = navigation.getParam('articleTitle');
     return {
-      title: boardName,
+      title,
       headerStyle: {
         backgroundColor: Colors.Surface
       }
@@ -23,30 +24,17 @@ export default class InBoardScreen extends React.Component {
   };
 
   state = {
-    data: []
+    isLoad : false
   }
-
   componentWillMount() {
-    this._getArticlesWithHref();
+    this._readArticle();
   }
 
-  async _getArticlesWithHref() {
+  async _readArticle() {
     const href = this.props.navigation.getParam('href');
-    const data = await ptt.getArticlesWithHref(href);
+    const data = await ptt.readArticle(href);
+    console.log(data);
     this.setState({data, isLoad: true});
-  }
-
-
-  _keyExtractor = (item, index) => `article-${index}`;
-  _renderItem( {item} ) {
-    return (
-      <ArticleListItem 
-        {...item} 
-        onPress={ async _ => {
-          this.props.navigation.navigate('ReadArticle', {...item} );
-        }}
-      />
-    )
   }
 
   _renderOnLoading() {
@@ -60,11 +48,12 @@ export default class InBoardScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <FlatList 
-          data={this.state.data}
-          renderItem={this._renderItem.bind(this)}
-          keyExtractor={this._keyExtractor}
-        />
+        <ScrollView>
+          <MonoText style={styles.title}>{this.state.data.articleTitle}</MonoText>
+          <MonoText style={{color:'white'}}>{this.state.data.author}</MonoText>
+          <MonoText style={{color:'white'}}>{this.state.data.articlePostTime}</MonoText>
+          <MonoText style={{color:'white'}}>{this.state.data.content}</MonoText>
+        </ScrollView>
       </View>
     );
   }
@@ -76,4 +65,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Background,
   },
   
+  title : {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
+  }
 });
